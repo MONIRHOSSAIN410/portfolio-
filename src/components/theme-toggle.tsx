@@ -1,31 +1,39 @@
 "use client";
 
-import * as React from "react";
+import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
+import { useMounted } from "@/hooks/use-mounted";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => setMounted(true), []);
+  const { resolvedTheme, setTheme } = useTheme();
+  const mounted = useMounted();
 
   if (!mounted) {
-    return <div className="size-9" />;
+    return <div className="size-9" aria-hidden />;
   }
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      aria-label="Toggle theme"
-      className="relative"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className="relative overflow-hidden"
     >
-      <Sun className="size-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute size-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <motion.span
+        key={isDark ? "moon" : "sun"}
+        initial={{ y: 14, opacity: 0, rotate: -35 }}
+        animate={{ y: 0, opacity: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 22 }}
+        className="flex items-center justify-center"
+      >
+        {isDark ? <Moon className="size-[1.2rem]" /> : <Sun className="size-[1.2rem]" />}
+      </motion.span>
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
