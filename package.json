@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "node api.js && next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "node api.js && next start",
+    "lint": "eslint",
+    "covers": "node scripts/capture-covers.mjs"
   },
   "dependencies": {
     "next": "^16.0.0",

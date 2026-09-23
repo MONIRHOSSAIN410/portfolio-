@@ -3,6 +3,14 @@
 import type { ReactNode } from "react";
 import { ReactLenis } from "lenis/react";
 
+import { useLenisAnchors } from "@/hooks/use-lenis-anchors";
+
+/** ReactLenis-এর ভেতরে থাকতে হয়, তাই আলাদা চাইল্ড কম্পোনেন্ট। */
+function Anchors() {
+  useLenisAnchors(-80);
+  return null;
+}
+
 export function SmoothScrollProvider({ children }: { children: ReactNode }) {
   return (
     <ReactLenis
@@ -15,6 +23,7 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
         touchMultiplier: 1.2,
       }}
     >
+      <Anchors />
       {children}
     </ReactLenis>
   );
