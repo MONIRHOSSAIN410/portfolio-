@@ -1,93 +1,91 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Download, Github, Linkedin, Mail, MessageCircle } from "lucide-react";
 
+import { ContactForm } from "@/components/contact-form";
+import { Magnetic } from "@/components/motion/magnetic";
+import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
-import { profile } from "@/lib/data";
+import type { Profile } from "@/lib/types";
 
-export function Contact() {
+export function Contact({ profile }: { profile: Profile }) {
+  const channels = [
+    {
+      icon: MessageCircle,
+      label: "WhatsApp",
+      value: profile.phoneDisplay,
+      href: profile.whatsappUrl,
+      external: true,
+    },
+    {
+      icon: Mail,
+      label: "Email",
+      value: profile.email,
+      href: `mailto:${profile.email}`,
+      external: false,
+    },
+    {
+      icon: Github,
+      label: "GitHub",
+      value: profile.githubUser,
+      href: profile.github,
+      external: true,
+    },
+    {
+      icon: Linkedin,
+      label: "LinkedIn",
+      value: "monir-hossain",
+      href: profile.linkedin,
+      external: true,
+    },
+  ];
+
   return (
-    <section id="contact" className="mx-auto max-w-4xl px-6 py-24 md:px-10">
-      <SectionHeading
-        eyebrow="Contact"
-        title="Let's build something together"
-        description="Have a project in mind or a role to discuss? I usually reply within a day."
-      />
+    <section id="contact" className="scroll-mt-24 bg-secondary/30 py-24">
+      <div className="mx-auto max-w-6xl px-6 md:px-10">
+        <SectionHeading
+          eyebrow="Contact"
+          title="Let's build something together"
+          description="Have a project in mind or a role to discuss? Send a message below — I usually reply within a day."
+        />
 
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.6, delay: 0.15 }}
-        className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2"
-      >
-        <a
-          href={profile.whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
-        >
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand">
-            <MessageCircle className="size-5" />
-          </span>
-          <div>
-            <div className="text-sm text-muted-foreground">WhatsApp</div>
-            <div className="font-medium">{profile.phoneDisplay}</div>
-          </div>
-        </a>
+        <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.1fr]">
+          <Reveal direction="left" className="space-y-4">
+            {channels.map(({ icon: Icon, label, value, href, external }) => (
+              <a
+                key={label}
+                href={href}
+                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-lg"
+              >
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand transition-transform group-hover:scale-110">
+                  <Icon className="size-5" />
+                </span>
+                <div className="min-w-0">
+                  <div className="text-sm text-muted-foreground">{label}</div>
+                  <div className="truncate font-medium">{value}</div>
+                </div>
+              </a>
+            ))}
 
-        <a
-          href={`mailto:${profile.email}`}
-          className="flex items-center gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
-        >
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand">
-            <Mail className="size-5" />
-          </span>
-          <div>
-            <div className="text-sm text-muted-foreground">Email</div>
-            <div className="font-medium break-all">{profile.email}</div>
-          </div>
-        </a>
+            <div className="flex justify-center pt-2">
+              <Magnetic>
+                <Button size="lg" variant="outline" asChild>
+                  <a href={profile.cvUrl} download>
+                    <Download className="size-4" /> Download Full CV
+                  </a>
+                </Button>
+              </Magnetic>
+            </div>
+          </Reveal>
 
-        <a
-          href={profile.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
-        >
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand">
-            <Github className="size-5" />
-          </span>
-          <div>
-            <div className="text-sm text-muted-foreground">GitHub</div>
-            <div className="font-medium">MONIRHOSSAIN410</div>
-          </div>
-        </a>
-
-        <a
-          href={profile.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
-        >
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand">
-            <Linkedin className="size-5" />
-          </span>
-          <div>
-            <div className="text-sm text-muted-foreground">LinkedIn</div>
-            <div className="font-medium">monir-hossain</div>
-          </div>
-        </a>
-      </motion.div>
-
-      <div className="mt-10 flex justify-center">
-        <Button size="lg" variant="brand" asChild>
-          <a href={profile.cvUrl} download>
-            <Download className="size-4" /> Download Full CV
-          </a>
-        </Button>
+          <Reveal direction="right" delay={0.1}>
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+              <ContactForm profile={profile} />
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
